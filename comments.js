@@ -1,29 +1,31 @@
-//create webserver
+// Create web server
 const express = require('express');
 const app = express();
-app.use(express.json());
+const port = 3000;
 
-//create a port
-const port = 8080;
+// Set up comments array
+let comments = [];
 
-//create an array to store comments
-const comments = [
-    {id: 1, author: 'John', content: 'Hello!'},
-    {id: 2, author: 'Jane', content: 'Hi there!'}
-];
+// Set up body parser
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
-//GET method
+// Set up static files
+app.use(express.static('public'));
+
+// Get comments
 app.get('/comments', (req, res) => {
-    res.send(comments);
+    res.json(comments);
 });
 
-//POST method
+// Create comment
 app.post('/comments', (req, res) => {
-    const comment = {
-                id: comments.length + 1,
-                author: req.body.author,
-                content: req.body.content
-            };
-            comments.push(comment);
-            res.status(201).send(comment);
-        });
+    let comment = req.body;
+    comments.push(comment);
+    res.json(comment);
+});
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is listening on http://localhost:${port}`);
+});
